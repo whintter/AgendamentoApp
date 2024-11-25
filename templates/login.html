@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        function mostrar_alerta(){
+            alert("Login Falhou!!");
+        }
+    </script>
+</head>
+<body>
+    <form action="/autenticar" method="POST">
+        <input type="text" name="Email" placeholder="Email">
+        <input type="password" name="Senha" placeholder="Senha">
+        <input type="submit" value="Logar">
+    </form>
+    <a href="/cadastro">Cadastro</a>
+    {% if login_falhou%}
+    <script>
+        mostrar_alerta()
+    </script>
+    {%endif%}
+    
+    <ul>
+        {% for cliente in lista %}
+            <li>
+                Nome: {{ cliente.nome }} <br>
+                Email: {{ cliente.email }} <br>
+                Senha: {{ cliente.senha }} <br>
+                <hr>
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

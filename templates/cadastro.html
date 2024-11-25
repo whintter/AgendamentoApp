@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro</title>
+    <script>
+        function mostrar_alerta(mensagem, redirecionar){
+            alert(mensagem);
+            if (redirecionar == true){
+                window.location.href = "/login";
+            }
+        }
+    </script>
+</head>
+<body>
+    <form action="/cadastrar" method="POST">
+        <input type="text" name="Nome" placeholder="nome">
+        <input type="text" name="Email" placeholder="Email">
+        <input type="text" name="Telefone" placeholder="Telefone">
+        <input type="password" name="Senha" placeholder="Senha">
+        <input type="submit" value="cadastrar">
+    </form>
+    <p> Já tem cadastro? <a href="/login">logar</a></p>
+    <!--ve se o cadastro falhou ou deu certo  para exibir o alert-->
+    {%if falha is not none %}
+        {%if falha%}
+            <script>
+                
+                const mensagem1 = "Cadastro falhou, tente novamente";
+                var redirecionar=false;
+                mostrar_alerta(mensagem1, redirecionar);
+                
+            </script>
+        {%elif not falha%}
+            <script>
+                const mensagem2="Cadastro executado com sucesso"; 
+                var redirecionar = true;
+                mostrar_alerta(mensagem2, redirecionar)
+            </script>
+        {%endif%}
+    {%endif%}
+    
+</body>
+</html>

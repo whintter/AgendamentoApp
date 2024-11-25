@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agenda Editável com Reativação</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      text-align: center;
+      padding: 10px;
+    }
+    th {
+      background-color: #f4f4f4;
+    }
+    td {
+      cursor: pointer;
+      position: relative;
+    }
+    td.selected {
+      background-color: #ffd966;
+    }
+    td.removed {
+      background-color: #ffcccc;
+      text-decoration: line-through;
+      cursor: not-allowed;
+    }
+    td.removed button {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      background: green;
+      color: white;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+      font-size: 10px;
+      padding: 2px 5px;
+    }
+    .btn {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: red;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .btn:hover {
+      background-color: darkred;
+    }
+  </style>
+</head>
+<body>
+  <h1>Agenda Editável com Reativação de Campos</h1>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Horário</th>
+        <th>Segunda</th>
+        <th>Terça</th>
+        <th>Quarta</th>
+        <th>Quinta</th>
+        <th>Sexta</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>08:00 - 09:00</td>
+        <td class="editable"></td>
+        <td class="editable"></td>
+        <td class="editable"></td>
+        <td class="editable"></td>
+        <td class="editable"></td>
+      </tr>
+      <tr>
+        <td>09:00 - 10:00</td>
+        <td class="editable"></td>
+        <td class="editable"></td>
+        <td class="editable"></td>
+        <td class="editable"></td>
+        <td class="editable"></td>
+      </tr>
+      <!-- Adicione mais horários conforme necessário -->
+    </tbody>
+  </table>
+
+  <button class="btn" onclick="excluirSelecionados()">Excluir Selecionados</button>
+
+  <script>
+    // Adiciona funcionalidade de seleção às células
+    document.querySelectorAll('.editable').forEach(cell => {
+      cell.addEventListener('click', () => {
+        if (cell.classList.contains('removed')) return; // Ignora células já removidas
+        cell.classList.toggle('selected'); // Alterna entre selecionado e não selecionado
+      });
+    });
+
+    // Exclui os horários selecionados
+    function excluirSelecionados() {
+      const selecionados = document.querySelectorAll('.selected');
+      selecionados.forEach(cell => {
+        cell.innerText = 'Removido';
+        cell.classList.add('removed');
+        cell.classList.remove('selected');
+
+        // Adiciona botão para reativar
+        const reativarBtn = document.createElement('button');
+        reativarBtn.innerText = 'Reativar';
+        cell.appendChild(reativarBtn);
+
+        reativarBtn.addEventListener('click', () => {
+          reativarCampo(cell, reativarBtn);
+        });
+      });
+    }
+
+    // Reativa um campo removido
+    function reativarCampo(cell, reativarBtn) {
+      cell.classList.remove('removed');
+      cell.innerText = '';
+      reativarBtn.remove();
+    }
+  </script>
+</body>
+</html>
