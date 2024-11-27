@@ -18,4 +18,3 @@ class Barber(User):
         self.bairro = bairro;
         self.numero = numero;
 
-baber1= Barber(nome="baber",telefone="111",email="Barber@",senha="barber123");

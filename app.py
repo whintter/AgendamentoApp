@@ -32,7 +32,7 @@ def autenticar():
     senha = request.form.get('Senha');
     tipo_conta = request.form.get('tipo_login');
 
-    baber1= Barber(nome="baber",telefone="111",email="Barber@",senha="barber123",logradouro="",numero="",descricao="",cidade="");
+    baber1= Barber(nome="barber",telefone="111",email="Barber@",senha="barber123",logradouro="",numero="",bairro="",descricao="",cidade="");
     
     #autentica o login pela classe autenticar
     if tipo_conta:
