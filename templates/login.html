@@ -11,7 +11,15 @@
     </script>
 </head>
 <body>
+    <!-- seleciona o tipo de conta -->
+   
+    <!-- login normal -->
     <form action="/autenticar" method="POST">
+        <select id="tipo_login" name="tipo_login" onchange="ajustarFormulario()">
+            <option value="cliente">cliente</option>
+            <option value="barber">Barbearia</option>
+            <option value="admin">Administrador</option>
+        </select>
         <input type="text" name="Email" placeholder="Email">
         <input type="password" name="Senha" placeholder="Senha">
         <input type="submit" value="Logar">
@@ -29,6 +37,7 @@
                 Nome: {{ cliente.nome }} <br>
                 Email: {{ cliente.email }} <br>
                 Senha: {{ cliente.senha }} <br>
+                
                 <hr>
             </li>
         {% endfor %}

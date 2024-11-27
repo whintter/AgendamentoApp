@@ -30,8 +30,10 @@ CREATE TABLE barbearia (
     cidade VARCHAR(255),
     estado VARCHAR(255),
     telefone VARCHAR(20),
-    fk_id_user INT,  -- Relacionamento com usuário
-    FOREIGN KEY (fk_id_user) REFERENCES usuario(id_user) ON DELETE CASCADE
+    email VARCHAR(255) NOT NULL UNIQUE,
+    senha VARCHAR(255) NOT NULL
+    -- fk_id_user INT,  -- Relacionamento com usuário
+    -- FOREIGN KEY (fk_id_user) REFERENCES usuario(id_user) ON DELETE CASCADE
 );
 
 -- Tabela para clientes

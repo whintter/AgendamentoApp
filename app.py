@@ -1,6 +1,7 @@
 from models.agendamento import Agendamento;
 from models.clientes import Cliente;
 from models.autenticar import Autenticar;
+from models.baber import Barber;
 from flask import Flask, render_template, request, redirect;
 from flask_sqlalchemy import SQLAlchemy;
 from banco.config_banco import db;
@@ -29,14 +30,28 @@ def autenticar():
     lista_clientes = Cliente.query.order_by(Cliente.id_cliente)
     email = request.form.get('Email');
     senha = request.form.get('Senha');
-    #autentica o login pela classe autenticar
-    Autenticacao1 = Autenticar(email,senha);
-    Autenticacao1.autenticacao();
+    tipo_conta = request.form.get('tipo_login');
 
-    if Autenticacao1._status:
-        return redirect("/index");
-    elif not Autenticacao1._status:
-        return render_template("login.html", lista = lista_clientes, login_falhou ="True"); 
+    baber1= Barber(nome="baber",telefone="111",email="Barber@",senha="barber123",logradouro="",numero="",descricao="",cidade="");
+    
+    #autentica o login pela classe autenticar
+    if tipo_conta:
+        if tipo_conta == "cliente":
+            Autenticacao1 = Autenticar(email,senha);
+            Autenticacao1.autenticacao_cliente();
+
+            if Autenticacao1._status:
+                return redirect("/index");
+            elif not Autenticacao1._status:
+                return render_template("login.html", lista = lista_clientes, login_falhou ="True"); 
+        elif tipo_conta == "barber":
+            Autenticacao1 = Autenticar(email,senha);
+            Autenticacao1.autenticacao_baber();
+
+            if Autenticacao1._status:
+                return redirect("/index");
+            elif not Autenticacao1._status:
+                return render_template("login.html", lista = lista_clientes, login_falhou ="True"); 
 #FIM LOGIN
 
 #comeco do cadastro
