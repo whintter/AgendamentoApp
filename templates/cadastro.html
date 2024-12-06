@@ -15,6 +15,10 @@
 </head>
 <body>
     <form action="/cadastrar" method="POST">
+        <select id="tipo_cad" name="tipo_cad">
+            <option value="cliente">cliente</option>
+            <option value="barber">Barbearia</option>
+        </select>
         <input type="text" name="Nome" placeholder="nome">
         <input type="text" name="Email" placeholder="Email">
         <input type="text" name="Telefone" placeholder="Telefone">
@@ -40,6 +44,6 @@
             </script>
         {%endif%}
     {%endif%}
-    
+    <h1>{{teste}}</h1>
 </body>
 </html>

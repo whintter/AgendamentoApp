@@ -9,12 +9,28 @@ class Barber(User):
     cidade = db.Column(db.Text, nullable=True);
     bairro = db.Column(db.Text, nullable=True);
     numero = db.Column(db.Text, nullable=True);
+    status = db.Column(db.Text, nullable = False);
 
-    def __init__(self, nome, telefone, email, senha, descricao, logradouro, cidade, bairro, numero):
+    def __init__(self, nome, telefone, email, senha):
         super().__init__(nome, telefone, email, senha);
-        self.descricao = descricao;
-        self.logradouro = logradouro;
-        self.cidade = cidade;
-        self.bairro = bairro;
-        self.numero = numero;
+        self.status ="P"; #status deve ser P para pendente ou A para ativo, deve ser usado para saber se a barbearua foi aceita pelo administrador
+   
+    @staticmethod
+    def listar_barbearia():
+        lista_babearias = Barber.query.order_by(Barber.id_barber).all();    
+        return lista_babearias;
 
+    def add_infos (self, descricao,logradouro,cidade,bairro,numero, email_update):
+        Barber.query.filter_by(email=email_update).update({
+            "cidade": cidade,
+            "descricao":descricao,
+            "logradouro":logradouro,
+            "bairro":bairro,
+            "numero":numero
+            })
+        db.session.commit();
+    
+    @staticmethod
+    def get_infos(get_id_barber):
+        list_get_infos = Barber.query.filter_by(id_barber=get_id_barber).first();
+        return list_get_infos;

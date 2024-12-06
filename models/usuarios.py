@@ -11,3 +11,4 @@ class User(db.Model):
         self.telefone = telefone;
         self.email = email;
         self.senha = senha;
+  

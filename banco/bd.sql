@@ -7,8 +7,10 @@ USE agendamento;
 -- Tabela para administradores
 CREATE TABLE admin (
     id_admin INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL,
-    senha VARCHAR(255) NOT NULL
+    senha VARCHAR(255) NOT NULL,
+    telefone VARCHAR(20)
 );
 
 -- Tabela para usuários (talvez para gerenciar a barbearia)
@@ -30,6 +32,7 @@ CREATE TABLE barbearia (
     cidade VARCHAR(255),
     estado VARCHAR(255),
     telefone VARCHAR(20),
+    status VARCHAR(1)  NOT NULL,
     email VARCHAR(255) NOT NULL UNIQUE,
     senha VARCHAR(255) NOT NULL
     -- fk_id_user INT,  -- Relacionamento com usuário
@@ -56,5 +59,6 @@ CREATE TABLE agendamentos (
     FOREIGN KEY (fk_id_cliente) REFERENCES cliente(id_cliente) ON DELETE CASCADE,
     FOREIGN KEY (fk_id_barber) REFERENCES barbearia(id_barber) ON DELETE CASCADE
 );
+insert into admin (nome,email,senha,telefone) values ("Admin","Admin@gmail","admin123","11 932364637");
 
 

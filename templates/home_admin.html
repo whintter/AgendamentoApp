@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Admin</title>
+</head>
+<body>
+   
+    {% with messages = get_flashed_messages() %}
+        {% if messages %} 
+            <ul>
+                {% for message in messages %}
+                    <li class="alert alert-success">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+    
+    <h1>Ola, Admin!!</h1>
+    <table border="1">
+    <thead>
+        <tr>
+            <th>Nome</th>
+            <th>Email</th>
+            <th>Status</th>
+            <th>Aceitar Cadastro</th>
+            <th>Deletar</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for barber in lista %}
+        <tr>
+            <td>{{ barber.nome }}</td>
+            <td>{{ barber.email }}</td>
+            <td>{{ barber.status }}</td>
+            {%if barber.status =="P"%}
+                <td><a href="{{url_for('manage_barber', id=barber.id_barber,acept = 'True', delete = 'False')}}">Aceitar Cadastro</a></td>
+            {%else%}
+                <td>Cadastro Aceito</td>
+            {%endif%}
+            <td><a href="{{url_for('manage_barber', id=barber.id_barber,acept = 'False', delete = 'True')}}">deletar</a></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+</html>

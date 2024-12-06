@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <script>
-        function mostrar_alerta(){
-            alert("Login Falhou!!");
+        function mostrar_alerta(mensagem){
+            alert(mensagem);
         }
     </script>
 </head>
@@ -27,8 +27,16 @@
     <a href="/cadastro">Cadastro</a>
     {% if login_falhou%}
     <script>
-        mostrar_alerta()
+        const mensagem1 = "Login falhou";
+        mostrar_alerta(mensagem1);
     </script>
+    {%endif%}
+
+    {% if pendente%}
+    <script>
+        const mensagem2 = "Sua conta está pendente, espera a confirmação de um administrador";
+        mostrar_alerta(mensagem2);
+    </script> 
     {%endif%}
     
     <ul>
@@ -42,5 +50,6 @@
             </li>
         {% endfor %}
     </ul>
+    <h1>{{bar}}</h1>
 </body>
 </html>

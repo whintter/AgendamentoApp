@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Barbearia</title>
+</head>
+<body>
+    <h1> Bem vindo Barbearia</h1>
+    {%if infos_false%}
+        <h3>Informacoes adicionais sobre a barbearia</h3>
+        <form action="/cad_infos" method="POST">
+            <input type="hidden"name ="email" value="{{email_}}">
+            <input type="text" name="Cidade" placeholder="Cidade">
+            <input type="text" name="Rua" placeholder="Rua">
+            <input type="text" name="Bairro" placeholder="Bairro">
+            <input type="text" name="Numero" placeholder="Numero">
+            <input type="text" name="Descricao" placeholder="Descricao">
+            <input type="submit" value="cadastrar">
+        </form>
+    {%endif%}
+    <p>{{ah}}</p>
+</body>
+</html>

@@ -2,9 +2,11 @@ from models.agendamento import Agendamento;
 from models.clientes import Cliente;
 from models.autenticar import Autenticar;
 from models.baber import Barber;
-from flask import Flask, render_template, request, redirect;
+from models.gerenciar_users import Gerenciar;
+from flask import Flask, render_template, request, redirect,url_for, session,flash;
 from flask_sqlalchemy import SQLAlchemy;
 from banco.config_banco import db;
+
 
 #informacoes do banco de dados, conexao, etc
 app = Flask(__name__)
@@ -17,6 +19,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = \
         database="agendamento"
     )
 db.init_app(app)
+app.secret_key="34b19cbe42cb947073759f8e5f993d82";
 #fim db
 
 #Login comeco 
@@ -32,8 +35,6 @@ def autenticar():
     senha = request.form.get('Senha');
     tipo_conta = request.form.get('tipo_login');
 
-    baber1= Barber(nome="barber",telefone="111",email="Barber@",senha="barber123",logradouro="",numero="",bairro="",descricao="",cidade="");
-    
     #autentica o login pela classe autenticar
     if tipo_conta:
         if tipo_conta == "cliente":
@@ -41,17 +42,32 @@ def autenticar():
             Autenticacao1.autenticacao_cliente();
 
             if Autenticacao1._status:
-                return redirect("/index");
+                get_name = Cliente.get_infos(email,"nome");
+                return redirect(url_for("home_cliente", name = get_name));
             elif not Autenticacao1._status:
                 return render_template("login.html", lista = lista_clientes, login_falhou ="True"); 
+        
         elif tipo_conta == "barber":
             Autenticacao1 = Autenticar(email,senha);
             Autenticacao1.autenticacao_baber();
 
             if Autenticacao1._status:
-                return redirect("/index");
+                if Autenticacao1._pendente:
+                    return render_template("login.html", lista = lista_clientes, pendente ="True"); 
+                else:
+                    return redirect(url_for("barber_home",Email_barber = email));
+                    
             elif not Autenticacao1._status:
                 return render_template("login.html", lista = lista_clientes, login_falhou ="True"); 
+        elif tipo_conta == "admin":
+            Autenticacao1 = Autenticar(email,senha);
+            Autenticacao1.autenticacao_admin();
+
+            if Autenticacao1._status:
+                return redirect("/home_admin");
+            elif not Autenticacao1._status:
+                return render_template("login.html", lista = lista_clientes, login_falhou ="True"); 
+    return render_template("login.html", lista=lista_clientes,login_falhou="True");
 #FIM LOGIN
 
 #comeco do cadastro
@@ -61,6 +77,7 @@ def cadastro():
 
 @app.route('/cadastrar', methods=["POST","GET"])
 def cadastrar():
+
     # atribuicao das variaveis pegando do input do cadastro.html
     nome_cadastrado = request.form.get('Nome');
     email_cadastrado = request.form.get("Email");
@@ -70,22 +87,85 @@ def cadastrar():
     #verifica se os campos estao vazio 
     if nome_cadastrado and email_cadastrado and telefone_cadastrado and senha_cadastrada:
         #filtra no banco se tem email ou telefone repetido, para nao deixar que aconteca a criacao do  usuario
-        cliente_existente = Cliente.query.filter((Cliente.email == email_cadastrado) | (Cliente.telefone == telefone_cadastrado)).first()
+        cliente_existente = Cliente.query.filter((Cliente.email == email_cadastrado) | (Cliente.telefone == telefone_cadastrado)).first();
+        barber_existente = Barber.query.filter((Barber.email == email_cadastrado)|(Barber.telefone == telefone_cadastrado)).first();
+        tipo_cad = request.form.get('tipo_cad');
 
-        if cliente_existente:
+        if cliente_existente or barber_existente:
             return render_template("cadastro.html", falha = True);
         else:
-            cliente_cadastrado = Cliente(nome=nome_cadastrado,telefone=telefone_cadastrado,email=email_cadastrado,senha=senha_cadastrada);
-            db.session.add(cliente_cadastrado);
-            db.session.commit();
-            return render_template("cadastro.html", falha = False);
+            if tipo_cad and tipo_cad=="cliente": 
+                cliente_cadastrado = Cliente(nome=nome_cadastrado,telefone=telefone_cadastrado,email=email_cadastrado,senha=senha_cadastrada);
+                db.session.add(cliente_cadastrado);
+                db.session.commit();
+                return render_template("cadastro.html", falha = False);
+        
+            elif tipo_cad and tipo_cad =="barber":
+                barber_cadastrado = Barber(nome=nome_cadastrado,telefone=telefone_cadastrado,email=email_cadastrado,senha=senha_cadastrada);
+                db.session.add(barber_cadastrado);
+                db.session.commit();
+                return render_template("cadastro.html", falha = False);
+            else:
+                return render_template("cadastro.html", falha = True,teste =tipo_cad);
     else: #se os campos de cadastro forem vazios vai aparecer um alert no Html
         return render_template("cadastro.html", falha = True);
 #fim cadastro
 
-#inicio home 
-@app.route("/index")
-def index():
-    return render_template("index.html");
+#inicio home cliente
+@app.route("/home_cliente/<string:name>")
+def home_cliente(name):
+    lista_barber = Barber.listar_barbearia();
+    return render_template("home_cliente.html", nome = name, list = lista_barber);
+@app.route("/view_barber/<int:id>")
+def view_barber(id):
+    get_barber_infos = Barber.get_infos(id);
+    return render_template("view_barber.html", info_barber = get_barber_infos)
+#fim home cliente
 
+#inicio home admin
+@app.route("/home_admin",methods =["POST","GET"])
+def home_admin():
+    listar = Barber.listar_barbearia();
+    return render_template("home_admin.html",lista = listar);
+
+@app.route("/manage_barber/<int:id>/<string:acept>/<string:delete>",methods =["POST","GET"])
+def manage_barber(id, acept,delete):
+    id_barber = id;
+    acept_cad = acept;
+    delete_cad = delete;
+    if acept_cad=="True":
+        aceitar_barber1 = Gerenciar(Barber,id_barber);
+        aceitar_barber1.aceitar_cad();
+        flash('Status da barbearia alterado com sucesso')
+        return redirect(url_for('home_admin'));
+    elif delete_cad == "True":
+        delete_barber1 = Gerenciar(Barber, id_barber);
+        delete_barber1.delete("barber");
+        return redirect(url_for('home_admin'));
+    else:
+        return redirect(url_for('home_admin'));
+#fim home admin
+
+#inicio home barbearia
+@app.route("/barber_home",methods =["POST","GET"])
+def barber_home():
+    email_barber = request.args.get('Email_barber')#pega o email mandado pela url for no redirect do login
+    infos_cadastradas =Barber.query.filter(Barber.email == email_barber).filter(Barber.descricao.is_(None)).first();
+    return render_template("home_barber.html", email_ = email_barber, infos_false = infos_cadastradas);
+
+@app.route("/cad_infos",methods =["POST","GET"])
+def cad_infos():
+    email_ = request.form.get('email');
+    Cidade= request.form.get('Cidade');
+    Rua = request.form.get('Rua');
+    Bairro = request.form.get('Bairro');
+    Numero = request.form.get('Numero');
+    Descricao = request.form.get('Descricao');
+    barbearia = Barber.query.filter_by(email = email_ ).first();
+
+    if barbearia:
+        barbearia.add_infos(Descricao, Rua,Cidade,Bairro,Numero,email_);
+        return redirect("/barber_home");
+    else:
+        return render_template("login.html");
 app.run(debug=True);   

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Bem Vindo {{nome}}</h1>
+    <h3>Barbearias Disponiveis</h3>
+    {% for barber in list%}
+        {%if barber.status == 'A'%}
+            <p>{{barber.nome}}</p>
+            <a href="{{url_for('view_barber',id= barber.id_barber,)}}">acessar barbearia</a><hr>
+            
+        {%endif%}
+    {%endfor%}
+</body>
+</html>
