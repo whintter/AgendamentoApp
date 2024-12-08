@@ -4,12 +4,13 @@ from banco.config_banco import db;
 class Barber(User):
     __tablename__ = 'barbearia';
     id_barber = db.Column(db.Integer, primary_key=True, autoincrement=True);
-    descricao = db.Column(db.Text, nullable=True);
+    descricao = db.Column(db.Text, nullable=True); descricao = db.Column(db.Text, nullable=True);
     logradouro = db.Column(db.Text, nullable=True);
     cidade = db.Column(db.Text, nullable=True);
     bairro = db.Column(db.Text, nullable=True);
     numero = db.Column(db.Text, nullable=True);
     status = db.Column(db.Text, nullable = False);
+    servicos = db.relationship('Servicos', backref='barber', lazy=True)
 
     def __init__(self, nome, telefone, email, senha):
         super().__init__(nome, telefone, email, senha);
@@ -31,6 +32,11 @@ class Barber(User):
         db.session.commit();
     
     @staticmethod
-    def get_infos(get_id_barber):
-        list_get_infos = Barber.query.filter_by(id_barber=get_id_barber).first();
-        return list_get_infos;
+    def get_infos(**kwargs):
+        query = Barber.query;
+
+        for key, value in kwargs.items():
+            query = query.filter(getattr(Barber, key) == value)
+        # Executa a consulta e retorna o primeiro resultado
+        result = query.first()
+        return result

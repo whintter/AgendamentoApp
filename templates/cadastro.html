@@ -4,6 +4,95 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastro</title>
+    <style>
+        /* Estilo global para a página */
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f7f7f7; /* Fundo suave */
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        /* Container do formulário */
+        .container {
+            background-color: #fff;
+            width: 100%;
+            max-width: 450px;
+            border-radius: 12px;
+            box-shadow: 0 4px 25px rgba(0, 0, 0, 0.1);
+            padding: 35px;
+            box-sizing: border-box;
+        }
+        /* Título */
+        h1 {
+            text-align: center;
+            font-size: 30px;
+            color: #e65a00; /* Laranja */
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        /* Formulário */
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+        /* Estilo dos campos de input */
+        input, select {
+            padding: 16px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            width: 100%;
+            box-sizing: border-box;
+            transition: border-color 0.3s ease;
+        }
+        input:focus, select:focus {
+            border-color: #e65a00; /* Laranja */
+            outline: none;
+        }
+        /* Estilo do botão de submit */
+        input[type="submit"] {
+            background-color: #e65a00; /* Laranja */
+            color: white;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            padding: 16px;
+            border-radius: 10px;
+            transition: background-color 0.3s ease;
+        }
+        input[type="submit"]:hover {
+            background-color: #d85b00; /* Laranja mais escuro */
+        }
+        /* Texto de link e área de login */
+        p {
+            text-align: center;
+            font-size: 14px;
+            color: #666;
+        }
+        a {
+            color: #e65a00;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        /* Responsividade para telas pequenas */
+        @media (max-width: 480px) {
+            .container {
+                padding: 25px;
+            }
+            h1 {
+                font-size: 26px;
+            }
+        }
+    </style>
     <script>
         function mostrar_alerta(mensagem, redirecionar){
             alert(mensagem);
@@ -14,36 +103,38 @@
     </script>
 </head>
 <body>
-    <form action="/cadastrar" method="POST">
-        <select id="tipo_cad" name="tipo_cad">
-            <option value="cliente">cliente</option>
-            <option value="barber">Barbearia</option>
-        </select>
-        <input type="text" name="Nome" placeholder="nome">
-        <input type="text" name="Email" placeholder="Email">
-        <input type="text" name="Telefone" placeholder="Telefone">
-        <input type="password" name="Senha" placeholder="Senha">
-        <input type="submit" value="cadastrar">
-    </form>
-    <p> Já tem cadastro? <a href="/login">logar</a></p>
-    <!--ve se o cadastro falhou ou deu certo  para exibir o alert-->
-    {%if falha is not none %}
-        {%if falha%}
+    <div class="container">
+        <h1>Cadastro</h1>
+        <form action="/cadastrar" method="POST">
+            <select id="tipo_cad" name="tipo_cad">
+                <option value="cliente">Cliente</option>
+                <option value="barber">Barbearia</option>
+            </select>
+            <input type="text" name="Nome" placeholder="Nome" required>
+            <input type="email" name="Email" placeholder="Email" required>
+            <input type="tel" name="Telefone" placeholder="Telefone" required>
+            <input type="password" name="Senha" placeholder="Senha" required>
+            <input type="submit" value="Cadastrar">
+        </form>
+        <p>Já tem cadastro? <a href="/login">Login</a></p>
+    </div>
+
+    <!-- Verifica se o cadastro falhou ou deu certo para exibir o alerta -->
+    {% if falha is not none %}
+        {% if falha %}
             <script>
-                
                 const mensagem1 = "Cadastro falhou, tente novamente";
-                var redirecionar=false;
+                var redirecionar = false;
                 mostrar_alerta(mensagem1, redirecionar);
-                
             </script>
-        {%elif not falha%}
+        {% elif not falha %}
             <script>
-                const mensagem2="Cadastro executado com sucesso"; 
+                const mensagem2 = "Cadastro executado com sucesso";
                 var redirecionar = true;
-                mostrar_alerta(mensagem2, redirecionar)
+                mostrar_alerta(mensagem2, redirecionar);
             </script>
-        {%endif%}
-    {%endif%}
-    <h1>{{teste}}</h1>
+        {% endif %}
+    {% endif %}
+    <h1>{{ teste }}</h1>
 </body>
 </html>

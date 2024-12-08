@@ -55,8 +55,17 @@ CREATE TABLE agendamentos (
     hora VARCHAR(5) NOT NULL,  -- Formato 'HH:MM'
     fk_id_cliente INT,
     fk_id_barber INT,
-    status CHAR(1) NOT NULL,  -- 'P' para pendente, 'C' para concluído, etc.
+    status CHAR(1) NOT NULL,  -- 'P' para pendente, A para agendado,  'C' para concluído ou Cancelado , etc.
     FOREIGN KEY (fk_id_cliente) REFERENCES cliente(id_cliente) ON DELETE CASCADE,
+    FOREIGN KEY (fk_id_barber) REFERENCES barbearia(id_barber) ON DELETE CASCADE
+);
+CREATE TABLE servicos (
+    id_servico INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(255) NOT NULL,
+    valor DECIMAL(10, 2) NOT NULL,
+    descricao VARCHAR(255),
+    fk_id_barber INT,
+    status CHAR(1) NOT NULL,  -- 'P' para pendente, 'C' para concluído, etc.
     FOREIGN KEY (fk_id_barber) REFERENCES barbearia(id_barber) ON DELETE CASCADE
 );
 insert into admin (nome,email,senha,telefone) values ("Admin","Admin@gmail","admin123","11 932364637");

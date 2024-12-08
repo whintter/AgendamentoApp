@@ -2,6 +2,7 @@ from models.agendamento import Agendamento;
 from models.clientes import Cliente;
 from models.autenticar import Autenticar;
 from models.baber import Barber;
+from models.servicos import Servicos;
 from models.gerenciar_users import Gerenciar;
 from flask import Flask, render_template, request, redirect,url_for, session,flash;
 from flask_sqlalchemy import SQLAlchemy;
@@ -118,8 +119,9 @@ def home_cliente(name):
     return render_template("home_cliente.html", nome = name, list = lista_barber);
 @app.route("/view_barber/<int:id>")
 def view_barber(id):
-    get_barber_infos = Barber.get_infos(id);
-    return render_template("view_barber.html", info_barber = get_barber_infos)
+    get_barber_infos = Barber.get_infos(id_barber = id);
+    lista_servicos = Servicos.listar_servicos(id_barber=id); 
+    return render_template("view_barber.html", info_barber = get_barber_infos, service_list = lista_servicos);
 #fim home cliente
 
 #inicio home admin
@@ -151,10 +153,12 @@ def manage_barber(id, acept,delete):
 def barber_home():
     email_barber = request.args.get('Email_barber')#pega o email mandado pela url for no redirect do login
     infos_cadastradas =Barber.query.filter(Barber.email == email_barber).filter(Barber.descricao.is_(None)).first();
-    return render_template("home_barber.html", email_ = email_barber, infos_false = infos_cadastradas);
+    session['email'] = email_barber;
+    return render_template("home_barber.html", email_ = email_barber, email1_ = email_barber, infos_false = infos_cadastradas);
 
 @app.route("/cad_infos",methods =["POST","GET"])
 def cad_infos():
+    infos_adc = request.args.get("adic_infos");
     email_ = request.form.get('email');
     Cidade= request.form.get('Cidade');
     Rua = request.form.get('Rua');
@@ -165,7 +169,21 @@ def cad_infos():
 
     if barbearia:
         barbearia.add_infos(Descricao, Rua,Cidade,Bairro,Numero,email_);
-        return redirect("/barber_home");
+        return render_template("home_barber.html", infos_adc = True, email1_ = email_ );
     else:
-        return render_template("login.html");
+        return render_template("home_barber.html", infos_adc = None);
+
+@app.route("/cad_servicos",methods =["POST","GET"])
+def cad_servicos():
+    email_barber = session.get('email');
+    nome_servico = request.form.get('nome_servico');
+    valor_servico =  request.form.get('valor');
+    descricao_servico =  request.form.get('Descricao');
+    if email_barber and nome_servico and valor_servico and descricao_servico:
+        barber_ = Barber.get_infos(email = email_barber)
+        add_servico= Servicos(nome=nome_servico,descricao=descricao_servico, valor=valor_servico,fk_id_barber=barber_.id_barber);
+        db.session.add(add_servico);
+        db.session.commit();
+        flash(f"Serviço Cadastrado com Sucesso");
+    return render_template("home_barber.html");
 app.run(debug=True);   

@@ -1,19 +1,83 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Barbearias Disponíveis</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f9f9f9;
+            font-family: Arial, sans-serif;
+        }
+
+        .text-orange {
+            color: #ff6700;
+        }
+
+        .btn-orange {
+            background-color: #ff6700;
+            color: white;
+            border: none;
+        }
+
+        .btn-orange:hover {
+            background-color: #e65c00;
+            color: white;
+        }
+
+        .card {
+            border: none;
+            border-radius: 12px;
+        }
+
+        .card:hover {
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: bold;
+        }
+
+        .container {
+            padding-top: 3rem;
+            padding-bottom: 3rem;
+        }
+    </style>
 </head>
+
 <body>
-    <h1>Bem Vindo {{nome}}</h1>
-    <h3>Barbearias Disponiveis</h3>
-    {% for barber in list%}
-        {%if barber.status == 'A'%}
-            <p>{{barber.nome}}</p>
-            <a href="{{url_for('view_barber',id= barber.id_barber,)}}">acessar barbearia</a><hr>
-            
-        {%endif%}
-    {%endfor%}
+    <div class="container">
+        <div class="text-center mb-5">
+            <h1 class="display-4">Bem-vindo, <p class="display-4 text-orange">{{nome}}</p></h1>
+            <p class="lead text-muted">Escolha sua barbearia preferida e agende seu horário!</p>
+        </div>
+
+        <div class="row">
+            {% for barber in list %}
+            {% if barber.status == 'A' %}
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card shadow-sm">
+                    <div class="card-body text-center">
+                        <h5 class="card-title text-orange">{{barber.nome}}</h5>
+                        <p class="card-text text-muted">Clique abaixo para saber mais.</p>
+                        <a href="{{url_for('view_barber', id=barber.id_barber)}}" class="btn btn-orange">Acessar Barbearia</a>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
+        <div class="text-center mt-4">
+            <button class="btn btn-orange" onclick="window.history.back()">Voltar</button>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>
