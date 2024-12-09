@@ -1,6 +1,6 @@
 from banco.config_banco import db;
 from models.usuarios import User;
-
+#uso de polimorfismo no get_info 
 #criscso do cliente
 class Cliente(User):
     #criacao no banco de dados 

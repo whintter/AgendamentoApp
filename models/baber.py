@@ -1,6 +1,7 @@
 from models.usuarios import User;
 from banco.config_banco import db;
 #uso de heranca
+#uso de polimorfismo no get_info 
 class Barber(User):
     __tablename__ = 'barbearia';
     id_barber = db.Column(db.Integer, primary_key=True, autoincrement=True);

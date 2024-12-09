@@ -2,7 +2,6 @@ from models.clientes import Cliente;
 from models.baber import Barber;
 from models.admin import Admin;
 from banco.config_banco import db;
-
 class Autenticar():
     def __init__(self,email, senha):
         self._email =email;

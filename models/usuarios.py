@@ -1,4 +1,5 @@
 from banco.config_banco import db;
+#uso de classe abstrata com heranca 
 class User(db.Model):
     __abstract__ = True 
     nome = db.Column(db.String(255), nullable=False);
@@ -11,4 +12,3 @@ class User(db.Model):
         self.telefone = telefone;
         self.email = email;
         self.senha = senha;
-  
