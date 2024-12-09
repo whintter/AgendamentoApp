@@ -10,7 +10,8 @@ class Barber(User):
     bairro = db.Column(db.Text, nullable=True);
     numero = db.Column(db.Text, nullable=True);
     status = db.Column(db.Text, nullable = False);
-    servicos = db.relationship('Servicos', backref='barber', lazy=True)
+    servicos = db.relationship('Servicos', backref='barber', lazy=True);
+    agendamento = db.relationship('Agendamento', backref='barber', lazy=True);
 
     def __init__(self, nome, telefone, email, senha):
         super().__init__(nome, telefone, email, senha);
@@ -37,6 +38,6 @@ class Barber(User):
 
         for key, value in kwargs.items():
             query = query.filter(getattr(Barber, key) == value)
-        # Executa a consulta e retorna o primeiro resultado
+            
         result = query.first()
         return result

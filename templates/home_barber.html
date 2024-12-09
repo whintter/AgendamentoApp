@@ -28,7 +28,7 @@
 
         /* Título principal */
         h1 {
-            color: #e67e22;
+            color: #323232;
             text-align: center;
             margin-bottom: 30px;
             font-size: 2.5rem;
@@ -248,7 +248,6 @@
             Adicionar
         </button>
 
-        <!-- Modal -->
         <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -277,6 +276,27 @@
                 </div>
             </div>
         </div>
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAgendamento">
+            Agendamentos
+        </button>
+        
+        <div class="modal fade" id="modalAgendamento" tabindex="-1" aria-labelledby="modalAgendamentoLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalAgendamentoLabel">Agendamentos</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                    </div>
+                    <div class="modal-body">
+                        {% for agendamento in lista_agendamento %}
+                            <p>Data: {{ agendamento.data }}</p>
+                            <p>Hora: {{ agendamento.hora }}</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        
 
         <!-- Botão de Voltar -->
         <button class="btn-back" onclick="window.history.back()">Voltar</button>

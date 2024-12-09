@@ -64,7 +64,7 @@
                     <div class="card-body text-center">
                         <h5 class="card-title text-orange">{{barber.nome}}</h5>
                         <p class="card-text text-muted">Clique abaixo para saber mais.</p>
-                        <a href="{{url_for('view_barber', id=barber.id_barber)}}" class="btn btn-orange">Acessar Barbearia</a>
+                        <a href="{{url_for('view_barber', id=barber.id_barber, get_email_cliente = email_cliente)}}" class="btn btn-orange">Acessar Barbearia</a>
                     </div>
                 </div>
             </div>

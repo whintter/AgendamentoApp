@@ -24,6 +24,17 @@
 </head>
 
 <body>
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <div>
+            {% for message in messages %}
+            <div class="alert alert-success" role="alert">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
     <div class="container mt-5">
         <div class="text-center mb-4">
             <h1 class="display-4">Bem-vindo à Barbearia {{info_barber.nome}}</h1>
@@ -47,6 +58,36 @@
             <div class="text-center mt-4">
                 <button class="btn btn-orange" onclick="window.history.back()">Voltar</button>
             </div>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                Agendar Horario
+            </button>
+    
+            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Agendar horario</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form action="/agendamento" method="POST">
+                                <input type="hidden" name="email_cliente" value="{{email_cliente}}">
+                                <input type="hidden" name="id_barber1" value="{{id_barber}}">
+                                <div class="mb-3">
+                                    <label for="data_agendamento" class="form-label">Data</label>
+                                    <input type="date" id="data_agendamento" name="data_agendamento" class="form-control" placeholder="Digite a data" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="horario_agendamento" class="form-label">Horario</label>
+                                    <input type="time" id="horario_agendamento" name="horario_agendamento" class="form-control" placeholder="Digite o horario do agendamento" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Adicionar Serviço</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    
         </div>
     </div>
 

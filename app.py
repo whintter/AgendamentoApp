@@ -44,7 +44,7 @@ def autenticar():
 
             if Autenticacao1._status:
                 get_name = Cliente.get_infos(email,"nome");
-                return redirect(url_for("home_cliente", name = get_name));
+                return redirect(url_for("home_cliente", name = get_name,get_email_cliente = email));
             elif not Autenticacao1._status:
                 return render_template("login.html", lista = lista_clientes, login_falhou ="True"); 
         
@@ -116,13 +116,34 @@ def cadastrar():
 @app.route("/home_cliente/<string:name>")
 def home_cliente(name):
     lista_barber = Barber.listar_barbearia();
-    return render_template("home_cliente.html", nome = name, list = lista_barber);
+    email_ = request.args.get("get_email_cliente");
+    return render_template("home_cliente.html", nome = name, list = lista_barber, email_cliente = email_);
+
 @app.route("/view_barber/<int:id>")
 def view_barber(id):
     get_barber_infos = Barber.get_infos(id_barber = id);
     lista_servicos = Servicos.listar_servicos(id_barber=id); 
-    return render_template("view_barber.html", info_barber = get_barber_infos, service_list = lista_servicos);
-#fim home cliente
+    email_ = request.args.get("get_email_cliente");
+    return render_template("view_barber.html", info_barber = get_barber_infos, service_list = lista_servicos, id_barber = id, email_cliente = email_);
+    #fim home cliente
+
+@app.route("/agendamento", methods=["POST","GET"])
+def agendamento():
+    data_agendamento = request.form.get("data_agendamento");
+    horario_agendamento  = request.form.get("horario_agendamento");
+    get_id_barber  = request.form.get("id_barber1");
+    get_email_cliente =  request.form.get("email_cliente");
+    if get_email_cliente :
+        get_id_cliente = Cliente.get_infos(get_email_cliente,"id_cliente");
+        agendamento1= Agendamento(data=data_agendamento,hora=horario_agendamento,fk_id_cliente=get_id_cliente,fk_id_barber=get_id_barber);
+        db.session.add(agendamento1);
+        db.session.commit();
+        flash("agendamento feito com sucesso!!");
+        return redirect(url_for("view_barber",id=get_id_barber));   
+
+
+    else:
+        return redirect('/login')
 
 #inicio home admin
 @app.route("/home_admin",methods =["POST","GET"])
@@ -132,6 +153,7 @@ def home_admin():
 
 @app.route("/manage_barber/<int:id>/<string:acept>/<string:delete>",methods =["POST","GET"])
 def manage_barber(id, acept,delete):
+
     id_barber = id;
     acept_cad = acept;
     delete_cad = delete;
@@ -154,7 +176,9 @@ def barber_home():
     email_barber = request.args.get('Email_barber')#pega o email mandado pela url for no redirect do login
     infos_cadastradas =Barber.query.filter(Barber.email == email_barber).filter(Barber.descricao.is_(None)).first();
     session['email'] = email_barber;
-    return render_template("home_barber.html", email_ = email_barber, email1_ = email_barber, infos_false = infos_cadastradas);
+    list = Barber.get_infos(email=session['email']);
+    list_agendamento = Agendamento.lista_agendamento(list.id_barber);
+    return render_template("home_barber.html", email_ = email_barber, email1_ = email_barber, infos_false = infos_cadastradas, lista_agendamento = list_agendamento);
 
 @app.route("/cad_infos",methods =["POST","GET"])
 def cad_infos():
