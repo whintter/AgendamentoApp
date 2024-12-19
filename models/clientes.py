@@ -17,7 +17,24 @@ class Cliente(User):
         info_want = getattr(get_infos,info_);
         return info_want;
 
+    def validar_dados(self):
+        if not self.senha:
+            raise ValueError("A senha do cliente é obrigatória")
+        if not self.email:
+            raise ValueError("O email do cliente é obrigatório")
 
+    def salvar(self):
+        self.validar_dados()
+        db.session.add(self)
+        db.session.commit()
+
+    @staticmethod
+    def buscar_todos():
+        return Cliente.query.all()
+
+    @staticmethod
+    def buscar_por_id(cliente_id):
+        return Cliente.query.get(cliente_id)
 
 
 

@@ -8,6 +8,10 @@ from flask import Flask, render_template, request, redirect,url_for, session,fla
 from flask_sqlalchemy import SQLAlchemy;
 from banco.config_banco import db;
 
+from flask import Flask, request, jsonify
+from models.dados import ServicoHelper, ListaLigada, FilaAtendimentos, ArvoreBinaria
+
+
 
 #informacoes do banco de dados, conexao, etc
 app = Flask(__name__)
@@ -211,3 +215,9 @@ def cad_servicos():
         flash(f"Serviço Cadastrado com Sucesso");
     return render_template("home_barber.html");
 app.run(debug=True);   
+
+
+
+
+
+

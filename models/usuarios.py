@@ -12,3 +12,9 @@ class User(db.Model):
         self.telefone = telefone;
         self.email = email;
         self.senha = senha;
+
+    def atualizar_dados(self, **kwargs):
+        for atributo, valor in kwargs.items():
+            if hasattr(self, atributo):
+                setattr(self, atributo, valor)
+        db.session.commit()

@@ -42,3 +42,22 @@ class Barber(User):
             
         result = query.first()
         return result
+    
+    def validar_dados(self):
+        if not self.senha:
+            raise ValueError("A senha do barbeiro(a) é obrigatória")
+        if not self.email:
+            raise ValueError("O email do barbeiro(a) é obrigatório")
+
+    def salvar(self):
+        self.validar_dados()
+        db.session.add(self)
+        db.session.commit()
+
+    @staticmethod
+    def buscar_todos():
+        return Barber.query.all()
+
+    @staticmethod
+    def buscar_por_id(barber_id):
+        return Barber.query.get(barber_id)
