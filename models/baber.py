@@ -12,7 +12,7 @@ class Barber(User):
     numero = db.Column(db.Text, nullable=True);
     status = db.Column(db.Text, nullable = False);
     servicos = db.relationship('Servicos', backref='barber', lazy=True);
-    agendamento = db.relationship('Agendamento', backref='barber', lazy=True);
+    agendamentos = db.relationship('Agendamento', backref='agendamentos_do_barber', lazy=True)  
 
     def __init__(self, nome, telefone, email, senha):
         super().__init__(nome, telefone, email, senha);

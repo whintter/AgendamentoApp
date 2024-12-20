@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agendamentos Pendentes</title>
+</head>
+<body>
+    <h1>Agendamentos Pendentes</h1>
+
+    {% if agendamentos %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Data</th>
+                    <th>Hora</th>
+                    <th>Cliente</th>
+                    <th>Barbearia</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for agendamento in agendamentos %}
+                    <tr>
+                        <td>{{ agendamento.data }}</td>
+                        <td>{{ agendamento.hora }}</td>
+                        <td>{{ agendamento.cliente.nome }}</td>
+                        <td>{{ agendamento.barber.nome }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>Não há agendamentos pendentes.</p>
+    {% endif %}
+</body>
+</html>

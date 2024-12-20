@@ -1,19 +1,7 @@
-#-Pesquisa e Ordenação:
-#Método para buscar um serviço pelo nome.
-#Método para ordenar serviços pelo valor.
-
-#-Listas Ligadas:
-#Estrutura para gerenciar agendamentos temporários.
-
-#-Fila:
-#Organização de clientes na ordem de atendimento.
-
-#-Árvore Binária:
-#Busca de clientes de forma eficiente.
 
 from collections import deque
 
-# 1. Análise de Complexidade em Pesquisa e Ordenação
+# Análise de Complexidade em Pesquisa e Ordenação
 class ServicoHelper:
     @staticmethod
     def buscar_servico_por_nome(lista_servicos, nome):
@@ -28,7 +16,7 @@ class ServicoHelper:
         """Ordena a lista de serviços pelo valor em ordem crescente. Complexidade: O(n log n)"""
         return sorted(lista_servicos, key=lambda servico: servico.valor)
 
-# 2. Uso de Listas Ligadas
+#  Uso de Listas Ligadas
 class No:
     def __init__(self, dado):
         self.dado = dado
@@ -56,34 +44,20 @@ class ListaLigada:
             atual = atual.proximo
         return elementos
 
-# Exemplo de uso para gerenciar agendamentos temporários
-lista_agendamentos = ListaLigada()
-lista_agendamentos.adicionar({"cliente": "João", "data": "2024-12-20", "hora": "14:00"})
-lista_agendamentos.adicionar({"cliente": "Maria", "data": "2024-12-20", "hora": "15:00"})
+#  Fila 
 
-# 3. Fila para Controle de Atendimentos Pendentes
 class FilaAtendimentos:
     def __init__(self):
-        self.fila = deque()
+        self.fila = []
 
-    def adicionar_cliente(self, cliente):
-        self.fila.append(cliente)
+    def adicionar_agendamento(self, agendamento):
+        self.fila.append(agendamento)
 
-    def atender_cliente(self):
-        if self.fila:
-            return self.fila.popleft()
-        return None
+    def obter_agendamentos(self):
+        return self.fila
 
-    def listar_fila(self):
-        return list(self.fila)
 
-# Exemplo de uso para fila de atendimentos
-fila_atendimentos = FilaAtendimentos()
-fila_atendimentos.adicionar_cliente("João")
-fila_atendimentos.adicionar_cliente("Maria")
-atendido = fila_atendimentos.atender_cliente()
-
-# 4. Árvore Binária para Busca de Clientes
+# Árvore Binária
 class NoArvore:
     def __init__(self, chave, cliente):
         self.chave = chave
@@ -123,18 +97,3 @@ class ArvoreBinaria:
         if chave < atual.chave:
             return self._buscar_recursivo(atual.esquerda, chave)
         return self._buscar_recursivo(atual.direita, chave)
-
-# Exemplo de uso para busca de clientes
-arvore_clientes = ArvoreBinaria()
-arvore_clientes.inserir("joao", {"nome": "João", "telefone": "123456789"})
-arvore_clientes.inserir("maria", {"nome": "Maria", "telefone": "987654321"})
-cliente_encontrado = arvore_clientes.buscar("joao")
-
-# Saídas de exemplo
-print("Lista de agendamentos temporários:", lista_agendamentos.listar())
-print("Fila de atendimentos após primeiro cliente atendido:", fila_atendimentos.listar_fila())
-print("Cliente encontrado na árvore binária:", cliente_encontrado.cliente if cliente_encontrado else "Não encontrado")
-
-
-#Importe as classes e funções necessárias nas páginas que a gente for usar. exemplo:
-#from estruturas import ServicoHelper, ListaLigada, FilaAtendimentos, ArvoreBinaria

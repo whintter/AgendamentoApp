@@ -8,9 +8,7 @@ from flask import Flask, render_template, request, redirect,url_for, session,fla
 from flask_sqlalchemy import SQLAlchemy;
 from banco.config_banco import db;
 
-from flask import Flask, request, jsonify
-from models.dados import ServicoHelper, ListaLigada, FilaAtendimentos, ArvoreBinaria
-
+from models.dados import ServicoHelper, No,ListaLigada, FilaAtendimentos,ArvoreBinaria,NoArvore
 
 
 #informacoes do banco de dados, conexao, etc
@@ -175,14 +173,28 @@ def manage_barber(id, acept,delete):
 #fim home admin
 
 #inicio home barbearia
-@app.route("/barber_home",methods =["POST","GET"])
+@app.route("/barber_home", methods=["POST", "GET"])
 def barber_home():
-    email_barber = request.args.get('Email_barber')#pega o email mandado pela url for no redirect do login
-    infos_cadastradas =Barber.query.filter(Barber.email == email_barber).filter(Barber.descricao.is_(None)).first();
-    session['email'] = email_barber;
-    list = Barber.get_infos(email=session['email']);
-    list_agendamento = Agendamento.lista_agendamento(list.id_barber);
-    return render_template("home_barber.html", email_ = email_barber, email1_ = email_barber, infos_false = infos_cadastradas, lista_agendamento = list_agendamento);
+    email_barber = request.args.get('Email_barber')  # Pega o email passado pela URL
+    infos_cadastradas = Barber.query.filter(Barber.email == email_barber).filter(Barber.descricao.is_(None)).first()
+    session['email'] = email_barber
+    list = Barber.get_infos(email=session['email'])
+    list_agendamento = Agendamento.lista_agendamento(list.id_barber)
+
+    fila_atendimentos = FilaAtendimentos()
+    agendamentos_pendentes = Agendamento.listar_pendentes(list.id_barber)
+
+    # Adiciona os agendamentos pendentes na fila
+    for agendamento in agendamentos_pendentes:
+        fila_atendimentos.adicionar_agendamento(agendamento)
+    return render_template(
+        "home_barber.html", 
+        email_ = email_barber, 
+        lista_agendamento = list_agendamento, 
+        fila_pendentes=fila_atendimentos.obter_agendamentos(), 
+        infos_false = infos_cadastradas
+    )
+
 
 @app.route("/cad_infos",methods =["POST","GET"])
 def cad_infos():
@@ -214,10 +226,21 @@ def cad_servicos():
         db.session.commit();
         flash(f"Serviço Cadastrado com Sucesso");
     return render_template("home_barber.html");
+
+@app.route("/mudar_status", methods=["GET", "POST"])
+def mudar_status():
+    email_barber =  session['email'];
+    id_barber = Barber.get_infos(email=session.get("email")).id_barber
+    proximo_agendamento = Agendamento.query.filter_by(fk_id_barber=id_barber, status="P").first()
+    if proximo_agendamento.status == "P": 
+            proximo_agendamento.status = "A";
+            db.session.commit()
+            flash(f"Status do agendamento alterado!")
+        
+    else:
+        flash("Agendamento não encontrado!")
+
+    return redirect(url_for("barber_home",Email_barber = session['email']))  
+
+
 app.run(debug=True);   
-
-
-
-
-
-
