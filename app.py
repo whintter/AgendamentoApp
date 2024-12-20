@@ -125,8 +125,17 @@ def home_cliente(name):
 def view_barber(id):
     get_barber_infos = Barber.get_infos(id_barber = id);
     lista_servicos = Servicos.listar_servicos(id_barber=id); 
+    arvore_servicos = ArvoreBinaria()
+    for servico in lista_servicos:
+        arvore_servicos.adicionar({
+            'id': servico.id_servico,
+            'nome': servico.nome,
+            'valor': servico.valor,
+            'descricao': servico.descricao
+        })
+    servicos_ordenados = arvore_servicos.listar_ordenado()
     email_ = request.args.get("get_email_cliente");
-    return render_template("view_barber.html", info_barber = get_barber_infos, service_list = lista_servicos, id_barber = id, email_cliente = email_);
+    return render_template("view_barber.html", info_barber = get_barber_infos,  id_barber = id, email_cliente = email_, service=servicos_ordenados);
     #fim home cliente
 
 @app.route("/agendamento", methods=["POST","GET"])
@@ -184,7 +193,6 @@ def barber_home():
     fila_atendimentos = FilaAtendimentos()
     agendamentos_pendentes = Agendamento.listar_pendentes(list.id_barber)
 
-    # Adiciona os agendamentos pendentes na fila
     for agendamento in agendamentos_pendentes:
         fila_atendimentos.adicionar_agendamento(agendamento)
     return render_template(

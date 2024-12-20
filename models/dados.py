@@ -57,43 +57,55 @@ class FilaAtendimentos:
         return self.fila
 
 
-# Árvore Binária
 class NoArvore:
-    def __init__(self, chave, cliente):
-        self.chave = chave
-        self.cliente = cliente
+    def __init__(self, servico):
+        self.servico = servico
         self.esquerda = None
         self.direita = None
+
 
 class ArvoreBinaria:
     def __init__(self):
         self.raiz = None
 
-    def inserir(self, chave, cliente):
-        novo_no = NoArvore(chave, cliente)
-        if not self.raiz:
+    def adicionar(self, servico):
+        novo_no = NoArvore(servico)
+        if self.raiz is None:
             self.raiz = novo_no
         else:
-            self._inserir_recursivo(self.raiz, novo_no)
+            self._adicionar_recursivo(self.raiz, novo_no)
 
-    def _inserir_recursivo(self, atual, novo_no):
-        if novo_no.chave < atual.chave:
-            if atual.esquerda:
-                self._inserir_recursivo(atual.esquerda, novo_no)
-            else:
+    def _adicionar_recursivo(self, atual, novo_no):
+        if novo_no.servico['nome'] < atual.servico['nome']:
+            if atual.esquerda is None:
                 atual.esquerda = novo_no
-        else:
-            if atual.direita:
-                self._inserir_recursivo(atual.direita, novo_no)
             else:
+                self._adicionar_recursivo(atual.esquerda, novo_no)
+        else:
+            if atual.direita is None:
                 atual.direita = novo_no
+            else:
+                self._adicionar_recursivo(atual.direita, novo_no)
 
-    def buscar(self, chave):
-        return self._buscar_recursivo(self.raiz, chave)
+    def buscar(self, nome):
+        return self._buscar_recursivo(self.raiz, nome)
 
-    def _buscar_recursivo(self, atual, chave):
-        if not atual or atual.chave == chave:
-            return atual
-        if chave < atual.chave:
-            return self._buscar_recursivo(atual.esquerda, chave)
-        return self._buscar_recursivo(atual.direita, chave)
+    def _buscar_recursivo(self, atual, nome):
+        if atual is None:
+            return None
+        if atual.servico['nome'] == nome:
+            return atual.servico
+        if nome < atual.servico['nome']:
+            return self._buscar_recursivo(atual.esquerda, nome)
+        return self._buscar_recursivo(atual.direita, nome)
+
+    def listar_ordenado(self):
+        servicos = []
+        self._in_order(self.raiz, servicos)
+        return servicos
+
+    def _in_order(self, atual, servicos):
+        if atual is not None:
+            self._in_order(atual.esquerda, servicos)
+            servicos.append(atual.servico)
+            self._in_order(atual.direita, servicos)
